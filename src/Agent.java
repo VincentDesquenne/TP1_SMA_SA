@@ -3,6 +3,7 @@ import java.util.Arrays;
 public class Agent extends Thread {
     private Environnement environnement;
     private String nom;
+    private int compteur = 0;
     private int[] position = new int[2];
     private int[] positionFinale = new int[2];
 
@@ -10,7 +11,15 @@ public class Agent extends Thread {
         this.nom = nom;
     }
 
-    public void run() {
+    public synchronized void run() {
+
+
+        while(!this.environnement.isFinished()) {
+            if (position[0] != positionFinale[0] || position[1] != positionFinale[1]) {
+                this.deplacement();
+            }
+        }
+
 
     }
 
@@ -25,14 +34,14 @@ public class Agent extends Thread {
                 '}';
     }
 
-    public void deplacement() {
+    public synchronized void deplacement() {
         int nextPositionX = this.position[0];
         int nextPositionY = this.position[1];
         boolean isDeplaced = false;
         if (this.position[0] < positionFinale[0]) {
-            nextPositionX = this.position[0] - 1;
-        } else if (this.position[0] > positionFinale[0]) {
             nextPositionX = this.position[0] + 1;
+        } else if (this.position[0] > positionFinale[0]) {
+            nextPositionX = this.position[0] - 1;
         }
         if (nextPositionX != this.position[0] && this.environnement.getGrille()[nextPositionX][this.position[1]] == null) {
             this.environnement.getGrille()[nextPositionX][this.position[1]] = this;
@@ -42,15 +51,15 @@ public class Agent extends Thread {
         }
 
         if (this.position[1] < positionFinale[1]) {
-            nextPositionY = this.position[1] - 1;
-        } else if (this.position[1] > positionFinale[1]) {
             nextPositionY = this.position[1] + 1;
+        } else if (this.position[1] > positionFinale[1]) {
+            nextPositionY = this.position[1] - 1;
         }
 
-        if (nextPositionY != this.position[1] && this.environnement.getGrille()[0][this.position[nextPositionY]] == null && !isDeplaced) {
+        if (nextPositionY != this.position[1] && this.environnement.getGrille()[this.position[0]][nextPositionY] == null && !isDeplaced) {
             //Se deplace
             this.environnement.getGrille()[this.position[0]][nextPositionY] = this;
-            this.environnement.getGrille()[this.position[0]][nextPositionY] = null;
+            this.environnement.getGrille()[this.position[0]][this.position[1]] = null;
             this.position[1] = nextPositionY;
         }
     }

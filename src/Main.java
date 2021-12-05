@@ -16,5 +16,18 @@ public class Main {
 
         Environnement env = new Environnement(5,5, arrayList);
         System.out.println(env);
+        a1.setEnvironnement(env);
+        a2.setEnvironnement(env);
+        a3.setEnvironnement(env);
+        a4.setEnvironnement(env);
+
+        for (Agent agent : arrayList) {
+            agent.start();
+        }
+
+        while (!env.isFinished()) {
+
+        }
+        System.out.println(env);
     }
 }

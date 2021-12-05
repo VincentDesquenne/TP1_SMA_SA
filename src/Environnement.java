@@ -67,6 +67,15 @@ public class Environnement {
         return "";
     }
 
+    public boolean isFinished() {
+        for (Agent agent : agents) {
+            int[] position = agent.getPosition();
+            int[] positionFinale = agent.getPositionFinale();
+            if (position[0] != positionFinale [0] || position[1] != positionFinale [1]) return false;
+        }
+        return true;
+    }
+
     public ArrayList<Agent> getAgents() {
         return agents;
     }
